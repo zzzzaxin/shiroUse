@@ -77,25 +77,25 @@ public class otherOptionsRealm {
         //jdbc 有两种，一种可以将数据库配置信息写在ini配置文件里（不推荐，方法已过期），另一种是在类中直接使用数据源来配置
         //使用jdbcRealm的话，数据库的表结构就得跟shiro源码写的一样，他是将用户，角色，权限与角色的对应关系存在了数据库当中
 
-        DefaultSecurityManager securityManager = new DefaultSecurityManager();
+        /*DefaultSecurityManager securityManager = new DefaultSecurityManager();
         DruidDataSource ds = new DruidDataSource();
         ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        ds.setUrl("jdbc:mysql://120.76.62.13:3606/xdclass_shiro?characterEncoding=UTF- 8&serverTimezone=UTC&useSSL=false");
-        ds.setUsername("test");
-        ds.setPassword("Xdclasstest");
+        ds.setUrl("jdbc:mysql://127.0.0.1:3306/shirotest");
+        ds.setUsername("root");
+        ds.setPassword("root");
 
         JdbcRealm jdbcRealm = new JdbcRealm();
         jdbcRealm.setPermissionsLookupEnabled(true);
         jdbcRealm.setDataSource(ds);
 
-        securityManager.setRealm(jdbcRealm);
+        securityManager.setRealm(jdbcRealm);*/
 
 
 
         //使用工厂
-        //Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiroJdncConfig.ini");
+        Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiroJdbcConfig.ini");
 
-        //SecurityManager securityManager = factory.getInstance();
+        SecurityManager securityManager = factory.getInstance();
 
         //选择securityManager环境
         SecurityUtils.setSecurityManager(securityManager);
@@ -104,7 +104,7 @@ public class otherOptionsRealm {
         Subject subject = SecurityUtils.getSubject();
 
         //读者登陆认证是否通过,shiro验证失败都是抛错误出来的，做好try  catch处理
-        UsernamePasswordToken authenticationToken = new UsernamePasswordToken("zexin","123");
+        UsernamePasswordToken authenticationToken = new UsernamePasswordToken("jack","123");
         subject.login(authenticationToken);
 
         System.out.println("登陆认证结果：" + subject.isAuthenticated());
@@ -115,6 +115,46 @@ public class otherOptionsRealm {
 
 
         System.out.println("验证用户是否有权限：" +  subject.isPermitted("video:buy"));
+
+        subject.logout();
+
+        System.out.println("logout认证结果：" + subject.isAuthenticated());
+
+        System.out.println("logout获取用户账号：" + subject.getPrincipal());
+
+
+
+    }
+
+
+    /**
+     * 使用自定义Reaml
+     */
+    @Test
+    public void quickStart3(){
+
+        DefaultSecurityManager defaultSecurityManager = new DefaultSecurityManager();
+        CustomerReaml customerReaml = new CustomerReaml();
+        defaultSecurityManager.setRealm(customerReaml);
+
+        //选择securityManager环境
+        SecurityUtils.setSecurityManager(defaultSecurityManager);
+
+        //获取subject实体，实体代表者用户或者第三方之类
+        Subject subject = SecurityUtils.getSubject();
+
+        //读者登陆认证是否通过,shiro验证失败都是抛错误出来的，做好try  catch处理
+        UsernamePasswordToken authenticationToken = new UsernamePasswordToken("admin","123123");
+        subject.login(authenticationToken);
+
+        System.out.println("登陆认证结果：" + subject.isAuthenticated());
+
+        System.out.println("获取用户账号：" + subject.getPrincipal());
+
+        System.out.println("验证用户是否有该角色：" +  subject.hasRole("root"));
+
+
+        System.out.println("验证用户是否有权限：" +  subject.isPermitted("video:add"));
 
         subject.logout();
 
