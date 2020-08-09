@@ -31,6 +31,7 @@ public class QiuckStartShiro {
         simpleAccountRealm.addAccount("zexin","123","root","admin");
         simpleAccountRealm.addAccount("zhangzexin","234","user");
 
+
         //指定数据源（reaml）
         defaultSecurityManager.setRealm(simpleAccountRealm);
 
