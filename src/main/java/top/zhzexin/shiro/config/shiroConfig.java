@@ -88,6 +88,8 @@ public class shiroConfig {
     @Bean
     public SecurityManager securityManager() {
         DefaultSecurityManager defaultSecurityManager = new DefaultSecurityManager();
+        defaultSecurityManager.setSessionManager(sessionManager());
+        //网友透露，sessionManager先设置会好点
         defaultSecurityManager.setRealm(customRealm());
         return defaultSecurityManager;
     }
@@ -123,12 +125,14 @@ public class shiroConfig {
 
     /**
      * 配置SessionManager
-     *
+     * 自定义sessionManager
      * @return
      */
     @Bean
     public SessionManager sessionManager() {
         CustomeSessionManager customeSessionManager = new CustomeSessionManager();
+        //设置未操作时，session超时时间，单位是毫秒
+        customeSessionManager.setGlobalSessionTimeout(20000);
         return customeSessionManager;
     }
 }
