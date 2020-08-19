@@ -5,6 +5,7 @@ import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -71,6 +72,7 @@ public class shiroConfig {
 
         //有编辑权限才可以访问
         filterChainDefinitionMap.put("/api/update","perms[video:update]");
+        filterChainDefinitionMap.put("/api/buy","perms[video:buy]");
 
         //坑二: 过滤链是顺序执行，从上而下，一般讲/** 放到最下面,通常其他路径未匹配到的 默认需登录才可访问
         filterChainDefinitionMap.put("/**", "authc");
@@ -87,11 +89,11 @@ public class shiroConfig {
      */
     @Bean
     public SecurityManager securityManager() {
-        DefaultSecurityManager defaultSecurityManager = new DefaultSecurityManager();
-        defaultSecurityManager.setSessionManager(sessionManager());
+        DefaultWebSecurityManager defaultWebSecurityManager = new DefaultWebSecurityManager();
+        defaultWebSecurityManager.setSessionManager(sessionManager());
         //网友透露，sessionManager先设置会好点
-        defaultSecurityManager.setRealm(customRealm());
-        return defaultSecurityManager;
+        defaultWebSecurityManager.setRealm(customRealm());
+        return defaultWebSecurityManager;
     }
 
     /**
