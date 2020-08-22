@@ -1,11 +1,16 @@
 package top.zhzexin.shiro.config;
 
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.SessionManager;
+import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.crazycake.shiro.RedisCacheManager;
+import org.crazycake.shiro.RedisManager;
+import org.crazycake.shiro.RedisSessionDAO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -93,6 +98,8 @@ public class shiroConfig {
         defaultWebSecurityManager.setSessionManager(sessionManager());
         //网友透露，sessionManager先设置会好点
         defaultWebSecurityManager.setRealm(customRealm());
+        //设置自定义的cacheManager
+        defaultWebSecurityManager.setCacheManager(cacheManager());
         return defaultWebSecurityManager;
     }
 
@@ -135,6 +142,39 @@ public class shiroConfig {
         CustomeSessionManager customeSessionManager = new CustomeSessionManager();
         //设置未操作时，session超时时间，单位是毫秒
         customeSessionManager.setGlobalSessionTimeout(20000);
+        customeSessionManager.setSessionDAO(sessionDAO());
         return customeSessionManager;
     }
+
+    /**
+     * 配置redisManager
+     */
+    public RedisManager redisManager(){
+        RedisManager redisManager = new RedisManager();
+        redisManager.setHost("localhost");
+        redisManager.setPort(6379);
+        return  redisManager;
+    }
+
+    /**
+     * 配置CacheManager
+     */
+    public CacheManager cacheManager(){
+        RedisCacheManager redisCacheManager = new RedisCacheManager();
+        redisCacheManager.setRedisManager(redisManager());
+        //设置缓存过期时间，防止操作员在后台设置权限时，缓存权限一直没更新，单位s
+        redisCacheManager.setExpire(20);
+        return redisCacheManager;
+    }
+
+    /**
+     * 配置redis的SessionDao
+     * 解决session持久化问题
+     */
+    public SessionDAO sessionDAO(){
+        RedisSessionDAO redisSessionDAO = new RedisSessionDAO();
+        redisSessionDAO.setRedisManager(redisManager());
+        return redisSessionDAO;
+    }
+
 }

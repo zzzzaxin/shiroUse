@@ -22,6 +22,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findAllUserInfoByUsername(String username) {
+        //这里可以做缓存处理，不过也可以使用shiro的CacheManager来管理
         User user = userMapper.findByUsername(username);
 
         //用户的角色集合

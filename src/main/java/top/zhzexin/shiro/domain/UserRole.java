@@ -1,6 +1,8 @@
 package top.zhzexin.shiro.domain;
 
-public class UserRole {
+import java.io.Serializable;
+
+public class UserRole implements Serializable {
 
     private int id;
 

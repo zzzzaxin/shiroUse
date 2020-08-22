@@ -1,6 +1,8 @@
 package top.zhzexin.shiro.domain;
 
-public class Permission {
+import java.io.Serializable;
+
+public class Permission implements Serializable {
 
     private int id;
 

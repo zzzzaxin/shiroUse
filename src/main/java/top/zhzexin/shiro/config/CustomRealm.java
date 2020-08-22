@@ -35,8 +35,8 @@ public class CustomRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         System.out.println("授权 doGetAuthorizationInfo");
 
-        String username = (String)principalCollection.getPrimaryPrincipal();
-        User user = userService.findAllUserInfoByUsername(username);
+        User checkUser = (User)principalCollection.getPrimaryPrincipal();
+        User user = userService.findAllUserInfoByUsername(checkUser.getUsername());
         //查询出该用户的角色与权限
         List<String> stringRoleList = new ArrayList<>();
         List<String> stringPermissionList = new ArrayList<>();
@@ -78,6 +78,6 @@ public class CustomRealm extends AuthorizingRealm {
             return null;
         }
 
-        return new SimpleAuthenticationInfo(username,allUserInfoByUsername.getPassword(),this.getClass().getName());
+        return new SimpleAuthenticationInfo(allUserInfoByUsername,allUserInfoByUsername.getPassword(),this.getClass().getName());
     }
 }

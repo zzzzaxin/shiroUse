@@ -1,9 +1,11 @@
 package top.zhzexin.shiro.domain;
 
+import java.io.Serializable;
+
 /**
  * 角色权限
  */
-public class RolePermission {
+public class RolePermission implements Serializable {
 
     private int id;
 

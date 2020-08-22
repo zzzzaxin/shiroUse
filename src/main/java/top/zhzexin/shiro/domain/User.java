@@ -1,12 +1,13 @@
 package top.zhzexin.shiro.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * 用户
  */
-public class User {
+public class User implements Serializable {
 
     private int id;
 
