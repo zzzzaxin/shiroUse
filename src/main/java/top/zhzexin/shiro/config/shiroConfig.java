@@ -174,6 +174,7 @@ public class shiroConfig {
     public SessionDAO sessionDAO(){
         RedisSessionDAO redisSessionDAO = new RedisSessionDAO();
         redisSessionDAO.setRedisManager(redisManager());
+        redisSessionDAO.setSessionIdGenerator(new CustomeSessionIdGenerator());
         return redisSessionDAO;
     }
 
